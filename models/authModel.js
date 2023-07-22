@@ -36,7 +36,7 @@ exports.insertUser = async (email, password, firstName, lastName) => {
     const result = await executeQuery(signUpQuery, "Signing up", [
       email,
       hashedPassword,
-      0,
+      "member",
       firstName,
       lastName,
     ]);

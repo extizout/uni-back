@@ -11,6 +11,15 @@ exports.isAuthenticated = async (req, res) => {
   }
 };
 
+exports.getUserData = async (req,res ) => {
+  const isAuthenticated = await req.isAuthenticated();
+  if(isAuthenticated){
+    res.status(200).json(req.user);
+  }else{
+    res.status(401).send();
+  }
+}
+
 exports.register = async (req, res, next) => {
   try {
     const { email, password, firstName, lastName } = req.body;
@@ -23,7 +32,7 @@ exports.register = async (req, res, next) => {
     if (insertId) {
       await passport.authenticate("local")(req, res, () => {
         //response with status 200, json and send session cookie by passportjs
-        res.status(200).json({ message: "Successfully Registered" }).send();
+        res.status(200).json({ message: "Successfully Registered", user: req.user }).send();
       });
     }
   } catch (error) {
@@ -34,7 +43,10 @@ exports.register = async (req, res, next) => {
 exports.logIn = async (req, res, next) => {
   passport.authenticate("local", {
     failureMessage: true,
-  })(req, res, () => {
+  })(req, res, (err) => {
+      if(err){
+        console.error(err)
+      }
     res.json({ user: req.user, session: req.session });
   });
 };

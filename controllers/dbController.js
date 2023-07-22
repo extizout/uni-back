@@ -18,7 +18,7 @@ exports.createUsersTable = async () => {
 
     await executeQuery("USE " + db.database, "Using " + db.database + " for Create Users TABLE if it not exsist.");
 
-    const createUsersTableQuery = "CREATE TABLE IF NOT EXISTS user (User_Id int NOT NULL PRIMARY KEY AUTO_INCREMENT, User_Email varchar(100) UNIQUE NOT NULL, User_Password VARCHAR(100), User_Firstname VARCHAR(50), User_Lastname VARCHAR(50), User_Sex CHAR(1), User_Role int NOT NULL, User_Create_At DATETIME DEFAULT NOW());";
+    const createUsersTableQuery = "CREATE TABLE IF NOT EXISTS user (User_Id int NOT NULL PRIMARY KEY AUTO_INCREMENT, User_Email varchar(100) UNIQUE NOT NULL, User_Password VARCHAR(100), User_Firstname VARCHAR(50), User_Lastname VARCHAR(50), User_Sex CHAR(1), User_Role ENUM('member', 'staff', 'admin') NOT NULL, User_Create_At DATETIME DEFAULT NOW());";
     await executeQuery(createUsersTableQuery, "Table created or already exists");
 
   } catch (err) {

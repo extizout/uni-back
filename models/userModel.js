@@ -2,19 +2,17 @@
 const { executeQuery } = require("../models/dbModel");
 
 async function roleValidate(roleInput) {
-  const intRole = parseInt(roleInput, 10);
-  const roleFaultValidation =
-    typeof intRole != "number" ||
-    -1 >= intRole ||
-    intRole >= 4 ||
-    isNaN(intRole);
+  const roleLists = ["member","staff","admin"]
+  const isValidRole = 
+    typeof roleInput === "string" &&
+    roleLists.includes(roleInput) 
 
-  if (roleFaultValidation) {
-    const error = "Role's type or value is invalid.";
-    throw error;
+  if(isValidRole){
+    return isValidRole
+  }else{
+    const error = "Role's type or value is invalid."
+    throw error
   }
-
-  return intRole;
 }
 
 exports.getAllUsers = async () => {
@@ -33,7 +31,7 @@ exports.getAllUsers = async () => {
 exports.getUserById = async (userId) => {
   try {
     const getUserByIdQuery =
-      "SELECT *, CONVERT_TZ(User_Create_At, '+00:00', '+07:00') AS Converted_User_At FROM user WHERE User_Id = ?";
+      "SELECT *, CONVERT_TZ(create_at, '+00:00', '+07:00') AS th_create_at FROM user WHERE user_id = ?";
 
     const result = await executeQuery(
       getUserByIdQuery,
@@ -52,7 +50,7 @@ exports.postUser = async (userDataObject) => {
     const { email, password, firstName, lastName, sex, role } = userDataObject;
     const roleValidated = await roleValidate(role);
     const postUserQuery =
-      "INSERT INTO user (User_Email, User_Password, User_Firstname, User_Lastname, User_Sex, User_Role) VALUES (?, ?, ?, ?, ?, ?)";
+      "INSERT INTO user (email, hashed_password, first_name, last_name, sex, role) VALUES (?, ?, ?, ?, ?, ?)";
     const result = await executeQuery(
       postUserQuery,
       { message: "Post User Successfully." },
@@ -71,7 +69,7 @@ exports.postUser = async (userDataObject) => {
 exports.updateRoleUser = async (userId, role) => {
   try {
     const roleValidated = await roleValidate(role);
-    const updateUserQuery = "UPDATE user SET User_Role = ? WHERE User_Id = ? ";
+    const updateUserQuery = "UPDATE user SET role = ? WHERE user_id = ? ";
     const results = await executeQuery(
       updateUserQuery,
       { message: "Update User Successfully." },
@@ -90,7 +88,7 @@ exports.updateRoleUser = async (userId, role) => {
 
 exports.deleteUserById = async (userId) => {
   try {
-    const updateUserQuery = "DELETE FROM user WHERE User_ID = ?";
+    const updateUserQuery = "DELETE FROM user WHERE user_id = ?";
     const result = await executeQuery(
       updateUserQuery,
       { message: `Deleting ${userId} Successfully.` },

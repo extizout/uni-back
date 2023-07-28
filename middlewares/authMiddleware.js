@@ -55,7 +55,7 @@ passport.use(new LocalStrategy(customField, verifyStrategy));
 passport.serializeUser(async function (user, cb) {
   console.log("-------> Serialize ");
   console.log("serialize User: " + JSON.stringify(user));
-  cb(null, user.User_Id);
+  cb(null, user.user_id);
 });
 
 passport.deserializeUser(async function (userId, cb) {

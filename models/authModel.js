@@ -9,7 +9,7 @@ exports.encrypt = async (password, saltRoundi) => {
 };
 
 exports.verifyStrategy = async (email, password, cb) => {
-  const selectQuery = "SELECT * FROM user WHERE User_Email = ?";
+  const selectQuery = "SELECT * FROM user WHERE email = ?";
   const result = await executeQuery(selectQuery, null, [email]);
 
   if (result.length === 1) {
@@ -17,9 +17,9 @@ exports.verifyStrategy = async (email, password, cb) => {
     return cb(null, false, { message: "Email and Password is incorrect." });
   }
 
-  const { User_Password } = result[0];
+  const { hashed_password } = result[0];
 
-  bcrypt.compare(password, User_Password).then((isMatch) => {
+  bcrypt.compare(password, hashed_password).then((isMatch) => {
     if (isMatch) {
       return cb(null, result[0]);
     } else if (!isMatch) {
@@ -31,7 +31,7 @@ exports.verifyStrategy = async (email, password, cb) => {
 exports.insertUser = async (email, password, firstName, lastName) => {
   try {
     const signUpQuery =
-      "INSERT INTO user (User_Email, User_Password, User_Role, User_Firstname, User_Lastname) VALUES (?, ?, ?, ? ,?)";
+      "INSERT INTO user (email, hashed_password, role, first_name, last_name) VALUES (?, ?, ?, ? ,?)";
     const hashedPassword = await bcrypt.hash(password, saltRound);
     const result = await executeQuery(signUpQuery, "Signing up", [
       email,

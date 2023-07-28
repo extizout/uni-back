@@ -66,7 +66,7 @@ exports.updateRoleUserResponse = async (req, res) => {
 
   } catch (error) {
     if (error === "Role's type or value is invalid.") {
-      res.status(400).json({ error: "Role is invalid." });
+      res.status(400).json({ error: "Role's type or value is invalid." });
     } else {
       handleErrorResponse(res, error, 500);
     }

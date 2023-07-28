@@ -8,7 +8,7 @@ async function roleValidate(roleInput) {
     roleLists.includes(roleInput) 
 
   if(isValidRole){
-    return isValidRole
+    return roleInput
   }else{
     const error = "Role's type or value is invalid."
     throw error

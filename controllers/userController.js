@@ -62,7 +62,7 @@ exports.updateRoleUserResponse = async (req, res) => {
     const { userId } = req.params;
     const result = await User.updateRoleUser(userId, role);
 
-    res.status(200).json({ message: `Updated ${userId}'s intRole Successfully.`, result });
+    res.status(200).json({ message: `Updated ${userId}'s Role Successfully.`, result });
 
   } catch (error) {
     if (error === "Role's type or value is invalid.") {

@@ -1,16 +1,44 @@
 //userModel.js
 const { executeQuery } = require("../models/dbModel");
 
-async function roleValidate(roleInput) {
-  const roleLists = ["member","staff","admin"]
-  const isValidRole = 
-    typeof roleInput === "string" &&
-    roleLists.includes(roleInput) 
+function filterUserSensitive(user) {
+  //Filter hashed_password out
+  const { hashed_password, ...rest } = user;
 
-  if(isValidRole){
-    return roleInput
-  }else{
-    const error = "Role's type or value is invalid."
+  const filteredUserSensitive = {
+    userId: rest.user_id,
+    email: rest.email,
+    firstName: rest.first_name,
+    lastName: rest.last_name,
+    sex: rest.sex,
+    role: rest.role,
+    createDate: rest.create_at,
+  };
+  return filteredUserSensitive;
+}
+
+async function roleValidate(roleInput) {
+  const roleLists = ["member", "staff", "admin"];
+  const isValidRole =
+    typeof roleInput === "string" && roleLists.includes(roleInput);
+
+  if (isValidRole) {
+    return roleInput;
+  } else {
+    const error = "Role's type or value is invalid.";
+    throw error;
+  }
+}
+
+async function sexValidate(sexInput) {
+  const sexLists = ["Female", "Male"];
+  const isValidSex =
+    typeof sexInput === "string" && sexLists.includes(sexInput);
+
+  if (isValidSex) {
+    return sexInput;
+  } else {
+    const error = "Sex's type or value is invalid";
     throw error
   }
 }
@@ -22,7 +50,8 @@ exports.getAllUsers = async () => {
       message: "Get All Users Successfully.",
     });
 
-    return results;
+    const filteredResults = results.map(filterUserSensitive);
+    return filteredResults;
   } catch (error) {
     throw error;
   }
@@ -66,14 +95,16 @@ exports.postUser = async (userDataObject) => {
   }
 };
 
-exports.updateRoleUser = async (userId, role) => {
+exports.updateRoleSexUser = async (userId, role, sex) => {
   try {
     const roleValidated = await roleValidate(role);
-    const updateUserQuery = "UPDATE user SET role = ? WHERE user_id = ? ";
+    const sexValidated = await sexValidate(sex);
+    const updateRoleSexUserQuery =
+      "UPDATE user SET role = ?, sex = ? WHERE user_id = ? ";
     const results = await executeQuery(
-      updateUserQuery,
+      updateRoleSexUserQuery,
       { message: "Update User Successfully." },
-      [roleValidated, userId]
+      [roleValidated, sexValidated, userId]
     );
 
     if (results.affectedRows < 1) {

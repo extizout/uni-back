@@ -55,22 +55,17 @@ exports.postUserReponse = async (req, res) => {
   }
 };
 
-exports.updateRoleUserResponse = async (req, res) => {
+exports.updateRoleSexUserResponse = async (req, res) => {
   try {
 
-    const { role } = req.body;
+    const { role, sex } = req.body;
     const { userId } = req.params;
-    const result = await User.updateRoleUser(userId, role);
+    const result = await User.updateRoleSexUser(userId, role, sex);
 
-    res.status(200).json({ message: `Updated ${userId}'s Role Successfully.`, result });
+    res.status(200).json({ message: `Updated userId:${userId} Successfully.` });
 
   } catch (error) {
-    if (error === "Role's type or value is invalid.") {
-      res.status(400).json({ error: "Role's type or value is invalid." });
-    } else {
       handleErrorResponse(res, error, 500);
-    }
-
   }
 };
 

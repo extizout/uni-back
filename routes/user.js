@@ -6,7 +6,7 @@ const usersController = require("../controllers/userController");
 router.get("/", usersController.getAllUsersResponse)
 router.get("/:userId", usersController.getUserByIdResponse)
 router.post("/", usersController.postUserReponse)
-router.put("/role/:userId", usersController.updateRoleUserResponse)
+router.put("/role&sex/:userId", usersController.updateRoleSexUserResponse)
 router.delete("/d/:userId", usersController.deleteUserByIdResponse)
 
 //Export

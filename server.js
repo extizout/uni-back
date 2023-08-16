@@ -1,11 +1,11 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const cors = require("cors");
 const db = require("./controllers/dbController");
 const morgan = require("morgan");
 
 //Import Middleware
 const passportMiddleware = require("./middlewares/passportMiddleware");
+const corsMiddleware = require("./middlewares/corsMiddleware");
 
 //Import Routes
 const indexRoutes = require("./routes/index");
@@ -15,12 +15,7 @@ const authRoutes = require("./routes/auth");
 const app = express();
 const port = 3000;
 
-app.use(
-  cors({
-    credentials: true,
-    origin: "http://localhost:5173",
-  })
-);
+app.use(corsMiddleware);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(morgan("dev"));

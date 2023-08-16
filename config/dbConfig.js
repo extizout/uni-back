@@ -1,5 +1,4 @@
 require("dotenv").config();
-const mysql = require("mysql2")
 
 module.exports = {
   host: process.env.DB_HOST, 

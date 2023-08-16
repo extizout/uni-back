@@ -5,7 +5,7 @@ const db = require("./controllers/dbController");
 const morgan = require("morgan");
 
 //Import Middleware
-const Middleware = require("./middlewares/authMiddleware");
+const passportMiddleware = require("./middlewares/passportMiddleware");
 
 //Import Routes
 const indexRoutes = require("./routes/index");
@@ -26,7 +26,7 @@ app.use(bodyParser.json());
 app.use(morgan("dev"));
 
 //Middleware Uses
-app.use(Middleware);
+app.use(passportMiddleware);
 
 //Establish Mysql Connection
 db.connect();
